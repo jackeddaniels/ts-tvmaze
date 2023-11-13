@@ -25,6 +25,19 @@ interface ShowInterface {
   image: string | null;
 }
 
+interface EpisodeAPIInterface {
+  id: number,
+  name: string,
+  season: number,
+  number: number
+}
+
+interface EpisodeInterface {
+  id: number,
+  name: string,
+  season: string,
+  number: string
+}
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -105,10 +118,28 @@ $searchForm.on("submit", async function (evt) {
 
 /** Given a show ID, get from API and return (promise) array of episodes:
  *      { id, name, season, number }
+ *  http://api.tvmaze.com/shows/SHOW-ID-HERE/episodes
  */
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id: number) {
+  const endpoint: string = `${BASE_URL}/shows/${id}/episodes`;
+  const response: Response = await fetch(endpoint);
+  const data: EpisodeAPIInterface[] = await response.json();
+
+  const episodes: EpisodeInterface[] = data.map(function (episodeData) {
+    const episode: EpisodeInterface = {
+      id: episodeData.id,
+      name: episodeData.name,
+      season: String(episodeData.season),
+      number: String(episodeData.number)
+    };
+
+    return episode;
+  })
+
+  return episodes;
+}
 
 /** Write a clear docstring for this function... */
 
-// function populateEpisodes(episodes) { }
+function populateEpisodes(episodes) { }

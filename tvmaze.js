@@ -10864,10 +10864,37 @@ $searchForm.on("submit", function (evt) {
 });
 /** Given a show ID, get from API and return (promise) array of episodes:
  *      { id, name, season, number }
+ *  http://api.tvmaze.com/shows/SHOW-ID-HERE/episodes
  */
-// async function getEpisodesOfShow(id) { }
+function getEpisodesOfShow(id) {
+    return __awaiter(this, void 0, void 0, function () {
+        var endpoint, response, data, episodes;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    endpoint = "".concat(BASE_URL, "/shows/").concat(id, "/episodes");
+                    return [4 /*yield*/, fetch(endpoint)];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    episodes = data.map(function (episodeData) {
+                        var episode = {
+                            id: episodeData.id,
+                            name: episodeData.name,
+                            season: String(episodeData.season),
+                            number: String(episodeData.number)
+                        };
+                        return episode;
+                    });
+                    return [2 /*return*/, episodes];
+            }
+        });
+    });
+}
 /** Write a clear docstring for this function... */
-// function populateEpisodes(episodes) { }
+function populateEpisodes(episodes) { }
 
 
 /***/ })
