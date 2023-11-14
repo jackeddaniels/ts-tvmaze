@@ -10782,7 +10782,10 @@ var $showsList = $("#showsList");
 var $episodesArea = $("#episodesArea");
 var $searchForm = $("#searchForm");
 var BASE_URL = 'https://api.tvmaze.com';
-var ALTERNATE_IMG_URL = 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F2d%2F0e%2Fb6%2F2d0eb6cdb8a4c77c25bb5460084ecffd.png&f=1&nofb=1&ipt=653643550e3764f8fb2fe84b94bfa8e370b2864c0a0e1cbdf10534ba3ce65230&ipo=images';
+var ALTERNATE_IMG_URL = 'https://external-content.duckduckgo.com/iu/?u=https%3'
+    + 'A%2F%2Fi.pinimg.com%2Foriginals%2F2d%2F0e%2Fb6%2F2d0eb6cdb8a4c77c25bb5460084'
+    + 'ecffd.png&f=1&nofb=1&ipt=653643550e3764f8fb2fe84b94bfa8e370b2864c0a0e1cbdf1'
+    + '0534ba3ce65230&ipo=images';
 /** Given a search term, search for tv shows that match that query.
  *
  *  Returns (promise) array of show objects: [show, show, ...].
@@ -10819,7 +10822,7 @@ function searchShowsByTerm(term) {
         });
     });
 }
-/** Given list of shows, create markup for each and to DOM */
+/** Given list of shows, create markup for each and add to DOM */
 function populateShows(shows) {
     $showsList.empty();
     for (var _i = 0, shows_1 = shows; _i < shows_1.length; _i++) {
@@ -10893,8 +10896,38 @@ function getEpisodesOfShow(id) {
         });
     });
 }
-/** Write a clear docstring for this function... */
-function populateEpisodes(episodes) { }
+/** Given list of episodes, create markup for each and add to DOM. */
+function populateEpisodes(episodes) {
+    $episodesArea.empty();
+    $episodesArea.show();
+    for (var _i = 0, episodes_1 = episodes; _i < episodes_1.length; _i++) {
+        var episode = episodes_1[_i];
+        var $episode = $("<ul>\n        <li>\n          ".concat(episode.name, " (Season ").concat(episode.season, ", Episode ").concat(episode.number, ")\n        </li>\n      </ul>\n      "));
+        $episodesArea.append($episode);
+    }
+}
+/** Get episodes from a show and add them to the DOM
+ * Takes show: { id, name, summary, image }
+*/
+function getAndDisplayEpisodes(evt) {
+    return __awaiter(this, void 0, void 0, function () {
+        var showId, episodes;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log($(evt.target).closest(".Show"));
+                    showId = Number($(evt.target).closest(".Show").data("show-id"));
+                    console.log("getAndDisplayEpisodes showId=", showId);
+                    return [4 /*yield*/, getEpisodesOfShow(showId)];
+                case 1:
+                    episodes = _a.sent();
+                    populateEpisodes(episodes);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+$showsList.on("click", ".btn", getAndDisplayEpisodes);
 
 
 /***/ })
